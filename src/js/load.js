@@ -1,7 +1,21 @@
+var TILE_SIZE = 64,
+ROWS = 12,
+COLS = 12;
+
+
+// ROWS = 16,
+// COLS = 16;
+
 var Game = {
-  w: 800,
-  h: 600
+  w: TILE_SIZE * COLS,
+  h: TILE_SIZE * ROWS 
 };
+
+
+// var Game = {
+//   w: 800,
+//   h: 600
+// };
 
 // var w = 800;
 // var h = 600;
@@ -18,7 +32,6 @@ Game.Boot.prototype = {
 		this.game.load.image('title', 'assets/images/title.png');
 		this.game.load.image('instructions', 'assets/images/instructions.png');
     this.game.load.bitmapFont('minecraftia', 'assets/fonts/font.png', 'assets/fonts/font.xml'); //load default font
-
 
     // //Scale Image to Fit Window
     // this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
@@ -49,11 +62,18 @@ Game.Load.prototype = {
     //Load button for twitter
     this.game.load.image('twitter','assets/images/twitter.png');
 
+    this.game.load.image('background','assets/images/background.png');
+
+    this.game.load.spritesheet('tiles', 'assets/images/tiles.png', 20, 20, 7);
+
+    this.game.load.atlasXML('tri','assets/images/tri_sheet.png','assets/images/tri_sheet.xml');
+    
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');
 
   },
   create: function() {
-    this.game.state.start('Menu');
+    // this.game.state.start('Menu');
+    this.game.state.start('Play');
   }
 };
