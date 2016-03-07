@@ -53,8 +53,8 @@ Game.Load.prototype = {
 
     this.game.load.spritesheet('tiles', 'assets/images/tiles.png', 20, 20, 7);
 
-    this.game.load.atlasXML('tri','assets/images/tri_sheet.png','assets/images/tri_sheet.xml');
-    this.game.load.atlasXML('enemy','assets/images/enemy_sheet.png','assets/images/enemy_sheet.xml');
+    this.game.load.atlasXML('tri','assets/images/tri_sheet.png','assets/atlas/tri_sheet.xml');
+    this.game.load.atlasXML('enemy','assets/images/enemy_sheet.png','assets/atlas/enemy_sheet.xml');
     this.game.load.image('ebullet', 'assets/images/bullet.png');
     this.game.load.image('pbullet', 'assets/images/pbullet.png');
     
