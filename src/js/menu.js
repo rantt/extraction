@@ -22,18 +22,18 @@ Game.Menu.prototype =  {
     this.titleText.tint = 0xff0000;
 
     this.game.add.tween(this.titleText)
-      .to( {y:100 }, 2000, Phaser.Easing.Linear.In, true, 0, -1)
+      .to( {y:300 }, 1000, Phaser.Easing.Linear.In, true, 0, -1)
       .yoyo(true);
 
 
-    var instructions = this.game.add.bitmapText(Game.w/2, Game.h-200, 'minecraftia', 'Fly to each planet and extracts its survivors to win.\nControls:\nWASD/Arrows to steer\nClick to Shoot', 18);
+    var instructions = this.game.add.bitmapText(Game.w/2, Game.h-200, 'minecraftia', 'Fly to each planet, extract all the surviviros to win.\nControls:\nWASD/Arrows to steer\nClick to Shoot', 18);
     instructions.anchor.setTo(0.5);
 
-    var music_by = this.game.add.bitmapText(Game.w/2, Game.h-10, 'minecraftia', 'Music: Cannon Tube by Max Gooroo', 18);
+    var music_by = this.game.add.bitmapText(Game.w/2, Game.h-10, 'minecraftia', 'Music: Put Yourself In My Place (PSG Version) by Snabish', 18);
     music_by.anchor.setTo(0.5);
     music_by.inputEnabled = true;
     music_by.events.onInputDown.add(function() {
-      window.open("http://opengameart.org/content/cannon-tube");
+      window.open("http://opengameart.org/content/put-yourself-in-my-place-psg-version");
     },this);
     music_by.events.onInputOver.add(function() {
       music_by.tint = 0xffff00;

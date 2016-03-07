@@ -1,6 +1,6 @@
 var Player = function(game, x, y) {
   this.game = game;
-  Phaser.Sprite.call(this, game, x, y, 'tri'); 
+  Phaser.Sprite.call(this, game, x, y, 'ship'); 
 
     // this.player = this.game.add.sprite(Game.w/2, Game.h/2, 'tri');
   this.anchor.setTo(0.5);
@@ -13,11 +13,18 @@ var Player = function(game, x, y) {
   this.scale.y = 1.2;
   this.fireRate = 250;
   this.nextFire = 0;
-  this.health = 10;
+  this.health = 20;
 
   this.game.camera.follow(this, Phaser.Camera.FOLLOW_TOPDOWN);
 
   this.game.add.existing(this);
+
+  this.hitSnd = this.game.add.sound('hit_shield');
+  this.hitSnd.volume = 0.2;
+  this.explosionSnd = this.game.add.sound('explosion');
+  this.explosionSnd.volume = 0.2;
+  this.shootSnd = this.game.add.sound('laser');
+  this.shootSnd.volume = 0.2;
 
 
   this.bullets = this.game.add.group();
@@ -73,6 +80,7 @@ Player.prototype.update = function() {
         if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
         {
           // this.shoot_s.play();
+          this.shootSnd.play();
           this.nextFire = this.game.time.now + this.fireRate;
           var bullet = this.bullets.getFirstExists(false);
           bullet.reset(this.x, this.y); bullet.rotation = this.game.physics.arcade.moveToPointer(bullet, 2000);
@@ -80,8 +88,10 @@ Player.prototype.update = function() {
     }
 };
 Player.prototype.damage = function() {
+  this.hitSnd.play();
   this.health -= 1;
   if (this.health <= 0) {
+    this.explosionSnd.play();
     this.alive = false;
     this.kill();
   }

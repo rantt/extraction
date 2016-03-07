@@ -65,7 +65,7 @@ Game.Lose.prototype =  {
       var twitter_name = 'rantt_';
       var tags = [''];
 
-      window.open('http://twitter.com/share?text=I+escaped+the+invasing+playing+Extraction+See+if+you+can+beat+it.+at&via='+twitter_name+'&url='+game_url+'&hashtags='+tags.join(','), '_blank');
+      window.open('http://twitter.com/share?text=Try+to+escape+the+invasion+playing+Extraction.+at&via='+twitter_name+'&url='+game_url+'&hashtags='+tags.join(','), '_blank');
     },
 
 };

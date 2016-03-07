@@ -67,10 +67,12 @@ Game.Play.prototype = {
       this.planets.add(planet); 
     }
 
-    // // Music
-    // this.music = this.game.add.sound('music');
-    // this.music.volume = 0.5;
-    // this.music.play('',0,1,true);
+    // Music
+    this.music = this.game.add.sound('music');
+    this.music.volume = 0.3;
+    this.music.loop = true;
+    this.music.play();
+
 
     //Load Minimap Background
     this.miniPixel = 4;
@@ -92,6 +94,14 @@ Game.Play.prototype = {
     this.mapOverlay.fixedToCamera = true;
 
     this.player = new Player(this.game, Game.w/2, Game.h/2); 
+    
+    // this.circ  = this.game.add.sprite(Game.w/2, Game.h/2, this.makeCircle(128, '#00ff00'));
+    this.circ  = this.game.add.sprite(this.player.x, this.player.y, this.makeCircle(128, '#fff'));
+    this.game.physics.enable(this.circ, Phaser.Physics.ARCADE);
+    this.circ.anchor.setTo(0.5);
+    this.circ.alpha = 0.5;
+    this.circ.tint = 0x00ff00;
+    // this.player.addChild(this.circ);
 
     //Enemies
     enemyBullets = game.add.group();
@@ -103,6 +113,7 @@ Game.Play.prototype = {
     enemyBullets.setAll('anchor.y', 0.5);
     enemyBullets.setAll('outOfBoundsKill', true);
     enemyBullets.setAll('checkWorldBounds', true);
+    enemyBullets.setAll('tint', '0x00ff00');
 
     for (var i = 0; i < enemiesTotal; i++)
     {
@@ -130,8 +141,10 @@ Game.Play.prototype = {
     
 
     if (this.player.passengers == this.pickupCount) {
+      this.music.stop();
 			this.game.state.start('Win');
     }else if (this.player.alive) {
+      //update shield color
     
       //Passenger Pickup Text
       this.passengerText.setText('Passengers: ' + this.player.passengers + '/'  + this.pickupCount, 24); 
@@ -176,12 +189,23 @@ Game.Play.prototype = {
       }
      
      //Check if Enemy Bullet hits Player 
-      this.game.physics.arcade.overlap(enemyBullets, this.player, this.bulletHitPlayer, null, this);
+     this.game.physics.arcade.overlap(enemyBullets, this.player, this.bulletHitPlayer, null, this);
      this.healthBar.x = this.player.x;
      this.healthBar.y = this.player.y-52;
-
+    
+     //Update Forcefield 
+     this.circ.x = this.player.x;  
+     this.circ.y = this.player.y;  
+     if (this.player.health < 5) {
+       this.circ.visible = false;
+     }else if (this.player.health < 10) {
+       this.circ.tint = 0xffffff;
+     }else if (this.player.health < 15) {
+       this.circ.tint = 0xffff00;
+     }
 
     }else{
+      this.music.stop();
 			this.game.state.start('Lose');
     }
 
@@ -195,7 +219,6 @@ Game.Play.prototype = {
     this.healthBar.scale.x = this.player.health/10;
   },
   bulletHitEnemy: function(enemy, bullet) {
-    console.log('hit enemy' + JSON.stringify(enemy.name));
     bullet.kill();
     enemies[enemy.name].damage();
   },

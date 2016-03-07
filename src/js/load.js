@@ -53,13 +53,19 @@ Game.Load.prototype = {
 
     this.game.load.spritesheet('tiles', 'assets/images/tiles.png', 20, 20, 7);
 
-    this.game.load.atlasXML('tri','assets/images/tri_sheet.png','assets/atlas/tri_sheet.xml');
-    this.game.load.atlasXML('enemy','assets/images/enemy_sheet.png','assets/atlas/enemy_sheet.xml');
+    this.game.load.image('ship', 'assets/images/ship.png');
+    this.game.load.image('enemy', 'assets/images/enemy.png');
     this.game.load.image('ebullet', 'assets/images/bullet.png');
     this.game.load.image('pbullet', 'assets/images/pbullet.png');
+
+    this.game.load.audio('hit', 'assets/audio/hit.wav');
+    this.game.load.audio('hit_shield', 'assets/audio/hit_shield.wav');
+    this.game.load.audio('explosion', 'assets/audio/explosion.wav');
+    this.game.load.audio('laser', 'assets/audio/laser.wav');
+    this.game.load.audio('elaser', 'assets/audio/elaser.wav');
     
     // Music Track
-    // this.game.load.audio('music','soundtrack.mp3');
+    this.game.load.audio('music','assets/audio/put_yourself_in_my_place.mp3');
 
   },
   create: function() {
