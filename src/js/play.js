@@ -19,10 +19,8 @@ var score = 0;
 // var FLOOR,WALL;
 var enemies = [];
 var enemyBullets;
-var enemiesTotal = 20;
+var enemiesTotal = 25;
 var enemiesAlive = 0;
-var enemiesMax = 10;
-
 
 Game.Play = function(game) {
   this.game = game;
@@ -56,8 +54,8 @@ Game.Play.prototype = {
     var pcount = 6;
     this.pickupCount = 0;
     for (var i = 0; i < pcount;i++) {
-      var x = rand(0,COLS*this.sizeMult*TILE_SIZE);  
-      var y = rand(0,ROWS*this.sizeMult*TILE_SIZE);  
+      var x = rand(100,COLS*this.sizeMult*TILE_SIZE-100);  
+      var y = rand(100,ROWS*this.sizeMult*TILE_SIZE-100);  
       var color = colors[rand(0,300)].rgba;
       var planet =  this.game.add.sprite(x, y, this.makeCircle(rand(128,256), color));
       planet.color = color;
@@ -120,22 +118,16 @@ Game.Play.prototype = {
         enemies.push(new Enemy(i, this.game, this.player, enemyBullets));
     }
 
-    // this.pickupBar = this.game.add.sprite(this.player.x, this.player.y-32, this.makeBox(80,7,'#00ff00'));
     this.pickupBar = this.game.add.sprite(this.player.x, this.player.y-32, this.makeBox(80,7,'#ffff00'));
     this.pickupBar.anchor.setTo(0.5);
     this.pickupBar.visible = false;
 
     this.healthBar = this.game.add.sprite(this.player.x, this.player.y-52, this.makeBox(80,7,'#00ff00'));
     this.healthBar.anchor.setTo(0.5);
-    // this.healthBar.fixedToCamera = true;
 
     this.passengerText = this.game.add.bitmapText(Game.w-320, 20,'minecraftia', 'Passengers: ' + this.player.passengers + '/'  + this.pickupCount, 24); 
     this.passengerText.fixedToCamera = true;
    
-    //Create Twitter button as invisible, show during win condition to post highscore
-    this.twitterButton = this.game.add.button(Game.w/2, Game.h/2, 'twitter', this.twitter, this);
-    this.twitterButton.anchor.set(0.5);
-    this.twitterButton.visible = false;
   },
   update: function() {
     
@@ -252,27 +244,5 @@ Game.Play.prototype = {
 		bmd.ctx.fill();
 		return bmd;
 	},
-
-  twitter: function() {
-    //Popup twitter window to post highscore
-    var game_url = 'http://www.divideby5.com/games/GAMETITLE/'; 
-    var twitter_name = 'rantt_';
-    var tags = [''];
-
-    window.open('http://twitter.com/share?text=My+best+score+is+'+score+'+playing+GAME+TITLE+See+if+you+can+beat+it.+at&via='+twitter_name+'&url='+game_url+'&hashtags='+tags.join(','), '_blank');
-  },
-
-  // toggleMute: function() {
-  //   if (musicOn == true) {
-  //     musicOn = false;
-  //     this.music.volume = 0;
-  //   }else {
-  //     musicOn = true;
-  //     this.music.volume = 0.5;
-  //   }
-  // },
-  // render: function() {
-  //   game.debug.text('Health: ' + tri.health, 32, 96);
-  // }
 
 };
