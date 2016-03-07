@@ -12,6 +12,8 @@ Game.Win.prototype =  {
 
 		this.game.stage.backgroundColor = '#000';
 
+    enemies = [];
+
     for (var i = 0;i < 1000;i++) {
       var bright = ['#FFF','#dcdcdc','#efefef','#ffff00','#00ff00'];
       var sizes = [1,1,1,1,1,2,2,2,3,3,3,4,4,5,6,7,8]

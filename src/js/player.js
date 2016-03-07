@@ -70,7 +70,6 @@ Player.prototype.update = function() {
 
     if (this.game.input.activePointer.isDown && this.alive == true)
     {
-      console.log(this.bullets);
         if (this.game.time.now > this.nextFire && this.bullets.countDead() > 0)
         {
           // this.shoot_s.play();

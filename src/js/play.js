@@ -128,7 +128,11 @@ Game.Play.prototype = {
   },
   update: function() {
     
-    if (this.player.alive) {
+
+    if (this.player.passengers == this.pickupCount) {
+			this.game.state.start('Win');
+    }else if (this.player.alive) {
+    
       //Passenger Pickup Text
       this.passengerText.setText('Passengers: ' + this.player.passengers + '/'  + this.pickupCount, 24); 
 
@@ -172,16 +176,13 @@ Game.Play.prototype = {
       }
      
      //Check if Enemy Bullet hits Player 
-    this.game.physics.arcade.overlap(enemyBullets, this.player, this.bulletHitPlayer, null, this);
-      
+      this.game.physics.arcade.overlap(enemyBullets, this.player, this.bulletHitPlayer, null, this);
      this.healthBar.x = this.player.x;
      this.healthBar.y = this.player.y-52;
 
 
-    }else if (this.player.passengers == this.pickupCount) {
-			this.game.stat.start('Win');
-    }else {
-			this.game.stat.start('Lose');
+    }else{
+			this.game.state.start('Lose');
     }
 
       // // Toggle Music
@@ -194,6 +195,7 @@ Game.Play.prototype = {
     this.healthBar.scale.x = this.player.health/10;
   },
   bulletHitEnemy: function(enemy, bullet) {
+    console.log('hit enemy' + JSON.stringify(enemy.name));
     bullet.kill();
     enemies[enemy.name].damage();
   },
