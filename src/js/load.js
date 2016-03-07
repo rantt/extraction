@@ -2,23 +2,10 @@ var TILE_SIZE = 64,
 ROWS = 12,
 COLS = 12;
 
-
-// ROWS = 16,
-// COLS = 16;
-
 var Game = {
   w: TILE_SIZE * COLS,
   h: TILE_SIZE * ROWS 
 };
-
-
-// var Game = {
-//   w: 800,
-//   h: 600
-// };
-
-// var w = 800;
-// var h = 600;
 
 Game.Boot = function(game) {
   this.game = game;
@@ -33,10 +20,10 @@ Game.Boot.prototype = {
 		this.game.load.image('instructions', 'assets/images/instructions.png');
     this.game.load.bitmapFont('minecraftia', 'assets/fonts/font.png', 'assets/fonts/font.xml'); //load default font
 
-    // //Scale Image to Fit Window
-    // this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-    // this.game.scale.maxHeight = window.innerHeight;
-    // this.game.scale.maxWidth = window.innerHeight*(Game.w/Game.h);
+    //Scale Image to Fit Window
+    this.game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+    this.game.scale.maxHeight = window.innerHeight;
+    this.game.scale.maxWidth = window.innerHeight*(Game.w/Game.h);
 
   },
   create: function() {
@@ -67,6 +54,9 @@ Game.Load.prototype = {
     this.game.load.spritesheet('tiles', 'assets/images/tiles.png', 20, 20, 7);
 
     this.game.load.atlasXML('tri','assets/images/tri_sheet.png','assets/images/tri_sheet.xml');
+    this.game.load.atlasXML('enemy','assets/images/enemy_sheet.png','assets/images/enemy_sheet.xml');
+    this.game.load.image('ebullet', 'assets/images/bullet.png');
+    this.game.load.image('pbullet', 'assets/images/pbullet.png');
     
     // Music Track
     // this.game.load.audio('music','soundtrack.mp3');
@@ -74,6 +64,7 @@ Game.Load.prototype = {
   },
   create: function() {
     // this.game.state.start('Menu');
-    this.game.state.start('Play');
+    // this.game.state.start('Play');
+    this.game.state.start('Lose');
   }
 };
