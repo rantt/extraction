@@ -10,8 +10,6 @@ function rand (min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// var musicOn = true;
-
 
 var wKey;
 var aKey;
@@ -36,31 +34,20 @@ Game.Play.prototype = {
 
     var colors = Phaser.Color.HSVColorWheel();
 
-    this.space = this.game.add.tileSprite(0,0,Game.w*this.sizeMult,Game.h*this.sizeMult,'background');
+    for (var i = 0;i < 1000;i++) {
+      var bright = ['#FFF','#dcdcdc','#efefef','#ffff00','#00ff00'];
+      var sizes = [1,1,1,1,1,2,2,2,3,3,3,4,4,5,6,7,8]
+      var starSize = sizes[rand(0,16)];
+
+      this.game.add.sprite(rand(0,COLS*this.sizeMult*TILE_SIZE),rand(0,ROWS*this.sizeMult*TILE_SIZE),this.makeBox(starSize, starSize, bright[rand(0,2)]));
+    }
 
     this.transferDelay = this.game.time.now;
     this.transferInc = 0;
 
-    // //Generate Level with Cellular Automata
-    // FLOOR = 33;
-    // WALL = 25;
-    // this.auto = new Automata(COLS*this.sizeMult, ROWS*this.sizeMult);
-    // this.auto.generate();
-    // this.auto.cleanup();
-    // var cave = this.auto.csv();
-    // this.game.load.tilemap('level', null, cave, Phaser.Tilemap.CSV );
-    // this.map = this.game.add.tilemap('level', TILE_SIZE, TILE_SIZE);
-    // this.map.addTilesetImage('tiles', this.makeTiles(TILE_SIZE)); //use generated sheet
-    // this.map.setTileIndexCallback(5, this.collectCoin, this);
-    // this.layer = this.map.createLayer(0);
-    // this.map.setCollision(WALL); //Black Empty Space
-    // this.layer.resizeWorld();
-
-
-
-
     this.planets = this.game.add.group();
-    var pcount = 4;
+    var pcount = 6;
+    this.pickupCount = 0;
     for (var i = 0; i < pcount;i++) {
       var x = rand(0,COLS*this.sizeMult*TILE_SIZE);  
       var y = rand(0,ROWS*this.sizeMult*TILE_SIZE);  
@@ -69,6 +56,7 @@ Game.Play.prototype = {
       planet.color = color;
       planet.passengers = rand(5,12);
       planet.total = planet.passengers;
+      this.pickupCount += planet.total;
       planet.transferring = false;
       this.planets.add(planet); 
     }
@@ -96,28 +84,10 @@ Game.Play.prototype = {
     // this.music.volume = 0.5;
     // this.music.play('',0,1,true);
 
-    //Setup WASD and extra keys
-    wKey = this.game.input.keyboard.addKey(Phaser.Keyboard.W);
-    aKey = this.game.input.keyboard.addKey(Phaser.Keyboard.A);
-    sKey = this.game.input.keyboard.addKey(Phaser.Keyboard.S);
-    dKey = this.game.input.keyboard.addKey(Phaser.Keyboard.D);
-    // muteKey = game.input.keyboard.addKey(Phaser.Keyboard.M);
-
     this.miniPixel = 4;
     var miniMapBmd = this.game.add.bitmapData(COLS*this.sizeMult*this.miniPixel, ROWS*this.sizeMult*this.miniPixel);
-    miniMapBmd.ctx.fillStyle = '#bc8d6b'
 
-    for(var y = 0; y < ROWS*this.sizeMult;y++) {
-      for(var x = 0; x < COLS*this.sizeMult;x++) {
-        // if (this.auto.map[y][x] === FLOOR) {
-          miniMapBmd.ctx.fillStyle = '#000';
-        // }else {
-        //   miniMapBmd.ctx.fillStyle = '#FFF';
-        // }
-
-        miniMapBmd.ctx.fillRect(x*this.miniPixel, y*this.miniPixel, this.miniPixel, this.miniPixel);
-      }
-    }
+    miniMapBmd.rect(0, 0, COLS*this.sizeMult*this.miniPixel, ROWS*this.sizeMult*this.miniPixel, '#213D5E');
 
     this.planets.forEach(function(planet) {
       // miniMapBmd.rect(planet.x*8/64, planet.y*8/64, 8, 8, '#ffff00');
@@ -155,58 +125,53 @@ Game.Play.prototype = {
     //Set Camera to follow Player
     this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN);
 
-
     this.pickupBar = this.game.add.sprite(this.player.x, this.player.y-32, this.makeBox(80,7,'#00ff00'));
     this.pickupBar.anchor.setTo(0.5);
     this.pickupBar.visible = false;
-   
-    // this.passengers = 10; 
 
+    this.passengerText = this.game.add.bitmapText(Game.w-320, 20,'minecraftia', 'Passengers: ' + this.player.passengers + '/'  + this.pickupCount, 24); 
+    this.passengerText.fixedToCamera = true;
+   
     //Create Twitter button as invisible, show during win condition to post highscore
-    this.twitterButton = this.game.add.button(this.game.world.centerX, this.game.world.centerY + 200,'twitter', this.twitter, this);
+    this.twitterButton = this.game.add.button(Game.w/2, Game.h/2, 'twitter', this.twitter, this);
     this.twitterButton.anchor.set(0.5);
     this.twitterButton.visible = false;
   },
   update: function() {
 
+
+    this.passengerText.setText('Passengers: ' + this.player.passengers + '/'  + this.pickupCount, 24); 
+
     //update map markers
     this.miniMapOverlay.context.clearRect(0, 0, this.miniMapOverlay.width, this.miniMapOverlay.height)
     this.miniMapOverlay.rect(Math.floor(this.player.x*this.miniPixel/TILE_SIZE), Math.floor(this.player.y*this.miniPixel/TILE_SIZE), this.miniPixel, this.miniPixel, '#ff0000');
-    this.miniMapOverlay.dirty = true;
 
     this.planets.forEach(function(planet) {
+      if (planet.passengers <= 0) {
+        this.miniMapOverlay.rect(Math.floor(planet.x*this.miniPixel/TILE_SIZE), Math.floor(planet.y*this.miniPixel/TILE_SIZE), this.miniPixel+1, this.miniPixel+1, '#fff');
+      }
+      this.miniMapOverlay.rect(Math.floor(this.player.x*this.miniPixel/TILE_SIZE), Math.floor(this.player.y*this.miniPixel/TILE_SIZE), this.miniPixel, this.miniPixel, '#ff0000');
       if (this.game.physics.arcade.distanceBetween(this.player, planet) < 300) {
          //transfer passengers to ship
          if (planet.passengers > 0) {
            if (this.transferDelay < this.game.time.now) {
              this.transferInc += 1;
+             this.player.passengers += 1;
              planet.passengers -= 1;
-             planet.transferring = true;
              this.transferDelay = this.game.time.now + 500;
            }
            this.pickupBar.visible = true;
            this.pickupBar.x = this.player.x;
            this.pickupBar.y = this.player.y-32;
            this.pickupBar.scale.x = this.transferInc/planet.total; 
-           // console.log(this.transferInc);
-           // console.log(planet.passengers);
-           // console.log('scale'+this.transferInc/planet.passengers);
-           // if (this.transferInc >= planet.passengers) {
-           //   planet.transferring = false;
-           //   planet.passengers = 0;
-           // }
          }else {
-             planet.transferring = false;
              this.pickupBar.visible = false;
              this.transferInc = 0;
          }
-         // console.log('inrange'); 
-      }else {
-        // this.transferInc = 0;
-         // this.pickupBar.visible = false;
       }
     },this);
 
+    this.miniMapOverlay.dirty = true;
 
 
     // Controls
